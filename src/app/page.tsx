@@ -56,7 +56,7 @@ export default function Home() {
           Também teremos profissionais registrando tudo e, depois, vamos compartilhar esses momentos com vocês.
             </>)
         },
-      ]}> </FAQ>
+      ]} />
     </main>
   );
 }
