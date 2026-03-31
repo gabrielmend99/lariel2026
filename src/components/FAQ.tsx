@@ -30,7 +30,7 @@ export function FAQ({ items }: FAQProps) {
         {items.map((item, index) => (
           <div
             key={index}
-            className="overflow-hidden border-b-2 border-blue"
+            className="overflow-hidden border-b border-blue"
           >
             <button
               onClick={() => toggle(index)}

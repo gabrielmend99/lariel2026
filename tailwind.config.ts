@@ -14,6 +14,7 @@ const config: Config = {
         cream: '#fff5e3',
         blue: '#7cbefa',
         purple: '#E8C4DC',
+        white: '#ffffff',
       },
       fontFamily: {
         syne: ['var(--font-syne)', 'sans-serif'],

@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Loader2, Heart, Check, Phone } from 'lucide-react';
+import { Search, Loader2, Heart, Check, Phone, MessageCircleCheck } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 import { searchGuest, type Guest } from '@/app/actions/searchGuest';
 import { confirmRsvp } from '@/app/actions/confirmRsvp';
+
 import {
   Dialog,
   DialogTrigger,
@@ -65,13 +67,16 @@ export function RSVPModal({ variant = 'primary', className = '' }: RSVPModalProp
         setState('error');
       } else if (result.guest) {
         setGuest(result.guest);
-        // Inicializa todos os membros como false (não confirmou)
-        const initialSelected: Record<string, boolean> = {};
-        initialSelected[result.guest.nome_principal] = false;
+        // Usa os confirmados do banco se existirem, senão inicializa como false
+        const initialSelected: Record<string, boolean> = result.guest.confirmados || {};
+        initialSelected[result.guest.nome_principal] = initialSelected[result.guest.nome_principal] || false;
         result.guest.grupo_familia.forEach((name) => {
-          initialSelected[name] = false;
+          if (!(name in initialSelected)) {
+            initialSelected[name] = false;
+          }
         });
         setSelectedMembers(initialSelected);
+        setTelefone(result.guest.telefone || '');
         setState('found');
       }
     } catch (err) {
@@ -92,6 +97,12 @@ export function RSVPModal({ variant = 'primary', className = '' }: RSVPModalProp
 
     if (!telefone.trim()) {
       setError('Por favor, informe um telefone para contato.');
+      return;
+    }
+
+    const digits = telefone.replace(/\D/g, '');
+    if (digits.length < 10 || digits.length > 11) {
+      setError('Informe um telefone válido com DDD (10 ou 11 dígitos).');
       return;
     }
 
@@ -124,6 +135,19 @@ export function RSVPModal({ variant = 'primary', className = '' }: RSVPModalProp
     setError(null);
   };
 
+  const formatPhone = (value: string) => {
+    const digits = value.replace(/\D/g, '');
+    if (digits.length <= 2) return digits;
+    if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`;
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhone(e.target.value);
+    setTelefone(formatted);
+    setError(null);
+  };
+
   // Gets all member names for rendering
   const allMembers = guest
     ? [guest.nome_principal, ...guest.grupo_familia]
@@ -140,11 +164,10 @@ export function RSVPModal({ variant = 'primary', className = '' }: RSVPModalProp
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-center gap-2">
-            <Heart className="h-5 w-5 text-rose-500 fill-rose-500" />
-            Confirme sua Presença
+            Confirme sua presença
           </DialogTitle>
           <DialogDescription>
-            Celebre conosco este momento especial
+            Celebre este momento inesquecível com a gente!
           </DialogDescription>
         </DialogHeader>
 
@@ -156,20 +179,20 @@ export function RSVPModal({ variant = 'primary', className = '' }: RSVPModalProp
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="space-y-4"
+              className="space-y-4 text-blue/50"
             >
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-blue" />
                 <input
                   type="text"
-                  placeholder="Digite seu nome conforme o convite"
+                  placeholder="Qual nome está no convite?"
                   value={searchName}
                   onChange={(e) => {
                     setSearchName(e.target.value);
                     setError(null);
                   }}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent transition-all"
+                  className="w-full pl-10 pr-4 py-3 border border-blue/30 bg-white text-blue rounded-xl focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent transition-all"
                   autoFocus
                 />
               </div>
@@ -178,12 +201,12 @@ export function RSVPModal({ variant = 'primary', className = '' }: RSVPModalProp
                 <p className="text-red-500 text-sm text-center">{error}</p>
               )}
 
-              <button
-                onClick={handleSearch}
-                className="w-full py-3 bg-rose-500 text-white font-medium rounded-xl hover:bg-rose-600 transition-colors"
+              <Button
+                onClick={handleSearch} variant="secondary"
+                className="w-full bg-orange text-cream"
               >
                 Buscar
-              </button>
+              </Button>
             </motion.div>
           )}
 
@@ -194,10 +217,10 @@ export function RSVPModal({ variant = 'primary', className = '' }: RSVPModalProp
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex flex-col items-center justify-center py-8 gap-3"
+              className="flex items-center justify-center py-8 gap-3"
             >
-              <Loader2 className="h-8 w-8 text-rose-500 animate-spin" />
-              <p className="text-gray-500">Buscando...</p>
+              <Loader2 className="h-8 w-8 text-orange animate-spin" />
+              <p className="text-orange">Buscando...</p>
             </motion.div>
           )}
 
@@ -210,10 +233,11 @@ export function RSVPModal({ variant = 'primary', className = '' }: RSVPModalProp
               exit={{ opacity: 0, y: -20 }}
               className="space-y-4"
             >
-              <div className="bg-rose-50 rounded-xl p-4 text-center">
-                <p className="text-rose-800 font-medium">Olá, {guest.nome_principal}!</p>
-                <p className="text-rose-600 text-sm mt-1">
-                  Quem confirmou presença?
+              <div className="flex flex-col gap-4 border border-blue/30 rounded-xl p-4">
+              <div className="text-center text-lg gap-2">
+                <p className="text-orange">Olá, {guest.nome_principal}!</p>
+                <p className="text-orange text-base mt-1">
+                  Quem estará com você no grande dia?
                 </p>
               </div>
 
@@ -221,43 +245,41 @@ export function RSVPModal({ variant = 'primary', className = '' }: RSVPModalProp
                 {allMembers.map((name) => (
                   <label
                     key={name}
-                    className="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
+                    className="flex items-center gap-2 p-3 rounded-xl border border-blue/30 hover:bg-blue/10 cursor-pointer transition-colors"
                   >
                     <Checkbox
                       checked={selectedMembers[name] || false}
                       onCheckedChange={() => toggleMember(name)}
                     />
-                    <span className="text-gray-700 font-medium">{name}</span>
+                    <span className="text-blue font-lg">{name}</span>
                   </label>
                 ))}
               </div>
 
               <div className="relative">
-                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <FaWhatsapp className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-blue" />
                 <input
                   type="tel"
-                  placeholder="Telefone para contato"
+                  placeholder="WhatsApp para contato"
                   value={telefone}
-                  onChange={(e) => {
-                    setTelefone(e.target.value);
-                    setError(null);
-                  }}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent transition-all"
+                  onChange={handlePhoneChange}
+                  maxLength={15}
+                  className="w-full pl-10 pr-4 py-3 border border-blue/30 rounded-xl text-blue focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent transition-all"
                 />
               </div>
+            </div>
 
               {error && (
                 <p className="text-red-500 text-sm text-center">{error}</p>
               )}
 
-              <button
-                onClick={handleConfirm}
-                className="w-full py-3 bg-rose-500 text-white font-medium rounded-xl hover:bg-rose-600 transition-colors flex items-center justify-center gap-2"
+              <Button
+                onClick={handleConfirm} variant="secondary"
+                className="w-full bg-orange text-cream"
               >
-                <Heart className="h-5 w-5 fill-white" />
                 Confirmar Presença
-              </button>
-            </motion.div>
+              </Button>
+            </motion.div>          
           )}
 
           {/* Estado: Confirmando */}
@@ -267,10 +289,10 @@ export function RSVPModal({ variant = 'primary', className = '' }: RSVPModalProp
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex flex-col items-center justify-center py-8 gap-3"
+              className="flex col items-center justify-center py-8 gap-3"
             >
-              <Loader2 className="h-8 w-8 text-rose-500 animate-spin" />
-              <p className="text-gray-500">Confirmando...</p>
+              <Loader2 className="h-8 w-8 text-orange animate-spin" />
+              <p className="text-orange">Confirmando...</p>
             </motion.div>
           )}
 
@@ -282,12 +304,12 @@ export function RSVPModal({ variant = 'primary', className = '' }: RSVPModalProp
               animate={{ opacity: 1, scale: 1 }}
               className="flex flex-col items-center justify-center py-8 gap-4 text-center"
             >
-              <div className="h-16 w-16 bg-rose-100 rounded-full flex items-center justify-center">
-                <Check className="h-8 w-8 text-rose-500" />
+              <div className="h-16 w-16 bg-orange/10 rounded-full flex items-center justify-center">
+                <Check className="h-8 w-8 text-orange" />
               </div>
               <div>
-                <p className="text-xl font-serif text-gray-800">Obrigado!</p>
-                <p className="text-gray-500 mt-2">
+                <p className="text-xl font-serif text-orange">Obrigado!</p>
+                <p className="text-orange mt-2">
                   Sua presença significa muito para nós.
                   <br />
                   Nos vemos no grande dia!

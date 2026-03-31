@@ -25,6 +25,9 @@ export default function Layout({
 }) {
   return (
     <html lang="pt-BR" className={`${syne.variable} ${meow.variable}`}>
+      <head>
+        <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+      </head>
       <body className={`${syne.className} antialiased overflow-x-hidden`}>{children}</body>
     </html>
   );

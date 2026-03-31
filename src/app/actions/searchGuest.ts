@@ -30,7 +30,7 @@ export async function searchGuest(name: string): Promise<GuestSearchResult> {
     const { data, error } = await supabase
       .from('convidados')
       .select('*')
-      .ilike('nome_principal', `%${name.trim()}%`)
+      .ilike('nome_principal', name.trim())
       .limit(1)
       .single();
 
