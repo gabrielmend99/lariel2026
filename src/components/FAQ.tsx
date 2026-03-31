@@ -21,7 +21,7 @@ export function FAQ({ items }: FAQProps) {
   };
 
   return (
-    <section className="py-12 px-12 w-full bg-cream flex flex-col items-center gap-8">
+    <section className="px-4 py-12 md:p-12 w-full bg-cream flex flex-col items-center gap-8">
       <h2 className="font-meow text-4xl text-blue">
         Perguntas Frequentes
       </h2>

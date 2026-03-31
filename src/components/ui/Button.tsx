@@ -13,9 +13,9 @@ export function Button({ children, href, variant = 'primary', className = '', on
   const baseStyles = "font-syne uppercase px-4 py-3 rounded-full font-medium transition-all hover:scale-105 active:scale-95 flex items-center justify-center";
   
   const variants = {
-    primary: "bg-cream text-orange text-lg hover:bg-white",
-    secondary: "bg-blue text-cream text-lg",
-    outline: "border-2 border-blue text-blue text-lg",
+    primary: "bg-cream text-orange text-lg hover:bg-white text-center",
+    secondary: "bg-blue text-cream text-lg text-center",
+    outline: "border-2 border-blue text-blue text-lg text-center",
   };
 
   const combinedStyles = `${baseStyles} ${variants[variant]} ${className}`;
