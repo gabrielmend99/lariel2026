@@ -4,7 +4,7 @@ import { H1 } from '@/components/ui/H1';
 import { Button } from '@/components/ui/Button';
 import { PixCopyButton } from '@/components/PixCopyButton';
 import { supabase } from '@/lib/supabase';
-import QRCode from 'assets/QR-Code.png';
+import QRCode from 'assets/qr-code.png';
 import PixIcon from 'assets/pix-icon.svg';
 import Link from 'next/link';
 
