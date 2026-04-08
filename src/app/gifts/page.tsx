@@ -28,8 +28,15 @@ async function getPresentes(): Promise<Presente[]> {
     return [];
   }
 
-  console.log('Presentes retornados:', data);
-  return data || [];
+  // Ordenar: com foto primeiro, depois sem foto
+  const sorted = (data || []).sort((a, b) => {
+    if (a.imagem_url && !b.imagem_url) return -1;
+    if (!a.imagem_url && b.imagem_url) return 1;
+    return 0;
+  });
+
+  console.log('Presentes retornados:', sorted);
+  return sorted;
 }
 
 export const dynamic = 'force-dynamic';
@@ -49,7 +56,7 @@ export default async function Gifts() {
       <Navbar />
       <section className="bg-orange w-full flex flex-col gap-8 items-center py-12">
         <H1 className="uppercase w-full max-w-[1060px] text-center">Lista de presentes</H1>
-        <p className="text-cream text-xl text-center w-full max-w-[1060px] px-4">Nossa lista de presentes reúne itens e experiências que vão nos fazer muito felizes. Fique à vontade para nos presentear com o que seu coração mandar.</p>
+        <p className="text-cream text-xl text-center w-full max-w-[1060px] px-4">Nossa lista de presentes reúne itens e experiências que vão nos fazer muito felizes.</p>
       </section>
 
       <section className="bg-cream w-full px-4 md:px-12 py-12">
@@ -76,10 +83,10 @@ export default async function Gifts() {
 
       <section className="bg-cream flex flex-col gap-12 w-full px-4 py-12 md:p-12">
         <h2 className="text-orange text-2xl uppercase">Produtos</h2>
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
+        <div className="w-full grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">
           {presentes.map((presente) => (
-            <div key={presente.id} className="bg-white rounded-2xl p-4 flex flex-col gap-4">
-              <div className="aspect-square relative rounded-lg overflow-hidden bg-gray-100">
+            <div key={presente.id} className="flex flex-col">
+              <div className="aspect-square relative overflow-hidden mix-blend-multiply">
                 {presente.imagem_url ? (
                   <Image
                     src={presente.imagem_url}
@@ -88,33 +95,35 @@ export default async function Gifts() {
                     className="object-cover"
                   />
                 ) : (
-                  <div className="flex items-center justify-center h-full text-gray-400">
+                  <div className="flex items-center justify-center h-full text-gray-400 px-4">
                     <span className="text-4xl">🎁</span>
                   </div>
                 )}
               </div>
-              <div className="flex flex-col gap-2">
-                <h3 className="text-orange text-xl">{presente.nome}</h3>
-                <p className="text-orange text-lg">{formatPrice(presente.valor)}</p>
+              <div className="flex flex-col p-4 gap-4">
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-orange text-xl">{presente.nome}</h3>
+                  <p className="text-orange text-lg">{formatPrice(presente.valor)}</p>
+                </div>
+                {presente.esgotado ? (
+                  <div className="bg-orange/20 text-orange/60 px-4 py-3 rounded-full text-center uppercase">
+                    Esse já foi
+                  </div>
+                ) : presente.link_mercado_pago ? (
+                  <Link
+                    href={presente.link_mercado_pago}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-orange text-cream px-4 py-3 rounded-full text-center font-medium uppercase hover:scale-105 transition-transform"
+                  >
+                    Presentear
+                  </Link>
+                ) : (
+                  <div className="bg-orange/20 text-orange/60 px-4 py-3 rounded-full text-center font-medium uppercase">
+                    Indisponível
+                  </div>
+                )}
               </div>
-              {presente.esgotado ? (
-                <div className="bg-gray-300 text-gray-600 px-4 py-3 rounded-full text-center uppercase">
-                  Esgotado
-                </div>
-              ) : presente.link_mercado_pago ? (
-                <Link
-                  href={presente.link_mercado_pago}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-orange text-cream px-4 py-3 rounded-full text-center font-medium uppercase hover:scale-105 transition-transform"
-                >
-                  Presentear
-                </Link>
-              ) : (
-                <div className="bg-gray-300 text-gray-600 px-4 py-3 rounded-full text-center font-medium uppercase">
-                  Indisponível
-                </div>
-              )}
             </div>
           ))}
         </div>

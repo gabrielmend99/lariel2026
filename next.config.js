@@ -12,6 +12,11 @@ const nextConfig = {
         hostname: 'exemplo.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'hnuvptpfrrvwnacdjrme.supabase.co',
+        pathname: '/**',
+      },
     ],
   },
 };
