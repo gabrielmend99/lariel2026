@@ -33,7 +33,7 @@ export function PixCopyButton() {
 
   return (
     <div className="inline-flex">
-      <Button onClick={handleCopy}>
+      <Button className="bg-orange" variant="secondary" onClick={handleCopy}>
         {copied ? 'Código PIX copiado' : 'Copiar chave PIX'}
       </Button>
     </div>

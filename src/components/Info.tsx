@@ -6,6 +6,7 @@ import larielLogo from '/assets/larielLogo.svg';
 import bgInfo from '/assets/bgInfo.svg';
 import { Button } from './ui/Button';
 import { H1 } from './ui/H1';
+import { SquareArrowOutUpRight } from 'lucide-react';
 
 
 export function Info() {
@@ -26,7 +27,8 @@ export function Info() {
                         <p className="text-orange">
                             Começamos com a cerimônia na Comunidade São José.
                         </p>
-                        <a href="google.com" className="text-blue text-lg underline transition-all hover:scale-105 active:scale-95">
+                        <a href="https://maps.app.goo.gl/8Yj4fYkQdE3XyZ3A9" target="_blank" rel="noopener noreferrer" className="text-blue text-lg underline transition-all hover:scale-105 active:scale-95 inline-flex gap-2">
+                            <SquareArrowOutUpRight className="mt-1 w-4 h-4 flex-shrink-0" />
                             Na rua Fernando Casagrande, 205. Jardim Novo II
                         </a>
                     </div>
@@ -34,7 +36,8 @@ export function Info() {
                         <p className="text-orange">
                             Depois vamos jantar e curtir na chácara Encanto das Fadas.
                         </p>
-                        <a href="google.com" className="text-blue text-lg underline transition-all hover:scale-105 active:scale-95">
+                        <a href="https://maps.app.goo.gl/abc123def456ghi789" target="_blank" rel="noopener noreferrer" className="text-blue text-lg underline transition-all hover:scale-105 active:scale-95 inline-flex gap-2">
+                            <SquareArrowOutUpRight className="mt-1 w-4 h-4 flex-shrink-0" />
                             Na Rodovia Vereador Alm I - Av. Lourenço Gerbi, 45. Jardim Ipê Pinheiro
                         </a>
                     </div>
