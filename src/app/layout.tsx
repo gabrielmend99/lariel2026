@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'pt_BR',
-    siteName: 'Casamento Larissa e Gabriel 2026',
+    siteName: 'Casamento Lariel 2026',
     title: 'Larissa e Gabriel - 25 de julho de 2026',
     description: 'Celebre conosco este momento especial.',
 

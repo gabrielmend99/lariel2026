@@ -17,13 +17,45 @@ interface Presente {
   link_mercado_pago: string | null;
 }
 
+// Seeded shuffle - Fisher-Yates com seed determinística
+function seededShuffle<T>(array: T[], seed: number): T[] {
+  const arr = [...array];
+  
+  // Generator pseudo-aleatório com seed
+  function mulberry32(a: number) {
+    return function() {
+      a |= 0;
+      a = (a + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    }
+  }
+
+  const rng = mulberry32(seed);
+
+  // Fisher-Yates shuffle
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+
+  return arr;
+}
+
+// Gerar seed baseado no dia atual (muda a cada dia)
+function getDailySeed(): number {
+  const today = new Date();
+  const dateString = today.toISOString().split('T')[0]; // YYYY-MM-DD
+  return parseInt(dateString.replace(/-/g, ''), 10);
+}
+
 async function getPresentes(): Promise<Presente[]> {
   console.log('[DEBUG] getPresentes chamado em:', new Date().toISOString());
 
   const { data, error } = await supabase
     .from('presentes')
-    .select('*')
-    .order('valor', { ascending: true });
+    .select('*');
 
   if (error) {
     console.error('[DEBUG] Erro ao buscar presentes:', error);
@@ -31,16 +63,20 @@ async function getPresentes(): Promise<Presente[]> {
   }
 
   console.log('[DEBUG] Presentes encontrados:', data?.length);
-  console.log('[DEBUG] Dados completos:', data);
 
-  // Ordenar: com foto primeiro, depois sem foto
-  const sorted = (data || []).sort((a, b) => {
-    if (a.imagem_url && !b.imagem_url) return -1;
-    if (!a.imagem_url && b.imagem_url) return 1;
-    return 0;
-  });
+  // Separar por presença de imagem
+  const comImagem = (data || []).filter(p => p.imagem_url);
+  const semImagem = (data || []).filter(p => !p.imagem_url);
 
-  console.log('[DEBUG] Presentes retornados após sort:', sorted.length);
+  // Embaralhar cada grupo com a mesma seed
+  const seed = getDailySeed();
+  const comImagemEmbaralhados = seededShuffle(comImagem, seed);
+  const semImagemEmbaralhados = seededShuffle(semImagem, seed + 1); // Seed diferente para o segundo grupo
+
+  // Combinar: com imagem primeiro (melhor visibilidade), depois sem imagem
+  const sorted = [...comImagemEmbaralhados, ...semImagemEmbaralhados];
+
+  console.log('[DEBUG] Presentes retornados após shuffle:', sorted.length);
   return sorted;
 }
 
