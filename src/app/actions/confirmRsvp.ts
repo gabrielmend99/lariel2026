@@ -11,19 +11,16 @@ export interface ConfirmRsvpResult {
  * Confirma a presença de convidados
  * @param guestId - ID do convidado principal
  * @param confirmados - Objeto com nomes e status de confirmação
- * @param telefone - Telefone de contato
  */
 export async function confirmRsvp(
   guestId: string,
-  confirmados: Record<string, boolean>,
-  telefone: string
+  confirmados: Record<string, boolean>
 ): Promise<ConfirmRsvpResult> {
   try {
     const { error } = await supabase
       .from('convidados')
       .update({
         confirmados,
-        telefone,
         data_confirmacao: new Date().toISOString(),
       })
       .eq('id', guestId);

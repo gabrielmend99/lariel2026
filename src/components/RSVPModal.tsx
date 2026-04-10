@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Loader2, Heart, Check, Phone, MessageCircleCheck } from 'lucide-react';
+import { Search, Loader2, Heart, Check, MessageCircleCheck } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { searchGuest, type Guest } from '@/app/actions/searchGuest';
 import { confirmRsvp } from '@/app/actions/confirmRsvp';
