@@ -38,7 +38,7 @@ export function Info() {
                         </p>
                         <a href="https://maps.app.goo.gl/YZi94TpPBE9HcoV2A" target="_blank" rel="noopener noreferrer" className="text-blue text-lg underline transition-all hover:scale-105 active:scale-95 inline-flex gap-2">
                             <SquareArrowOutUpRight className="mt-1 w-4 h-4 flex-shrink-0" />
-                            Na Av. Lourenço Gerbi, 45. Jardim Ipê Pinheiro
+                            Na avenida Lourenço Gerbi, 45. Jardim Ipê Pinheiro
                         </a>
                     </div>
                 </div>
