@@ -32,7 +32,6 @@ export function RSVPModal({ variant = 'primary', className = '' }: RSVPModalProp
   const [guest, setGuest] = useState<Guest | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedMembers, setSelectedMembers] = useState<Record<string, boolean>>({});
-  const [telefone, setTelefone] = useState('');
 
   const resetForm = () => {
     setState('search');
@@ -40,7 +39,6 @@ export function RSVPModal({ variant = 'primary', className = '' }: RSVPModalProp
     setGuest(null);
     setError(null);
     setSelectedMembers({});
-    setTelefone('');
   };
 
   const handleOpenChange = (isOpen: boolean) => {
@@ -76,11 +74,10 @@ export function RSVPModal({ variant = 'primary', className = '' }: RSVPModalProp
           }
         });
         setSelectedMembers(initialSelected);
-        setTelefone(result.guest.telefone || '');
         setState('found');
       }
     } catch (err) {
-      setError('Erro ao buscar. Tente novamente.');
+      setError('Convidado não encontrado. Digite o nome exatamente como está no convite.');
       setState('error');
     }
   };
@@ -91,25 +88,14 @@ export function RSVPModal({ variant = 'primary', className = '' }: RSVPModalProp
     // Valida se pelo menos uma pessoa confirmou
     const hasConfirmation = Object.values(selectedMembers).some((v) => v);
     if (!hasConfirmation) {
-      setError('Selecione pelo menos uma pessoa que confirmou presença.');
-      return;
-    }
-
-    if (!telefone.trim()) {
-      setError('Por favor, informe um telefone para contato.');
-      return;
-    }
-
-    const digits = telefone.replace(/\D/g, '');
-    if (digits.length < 10 || digits.length > 11) {
-      setError('Informe um telefone válido com DDD (10 ou 11 dígitos).');
+      setError('Confirme a presença de pelo menos uma pessoa.');
       return;
     }
 
     setState('confirming');
 
     try {
-      const result = await confirmRsvp(guest.id, selectedMembers, telefone);
+      const result = await confirmRsvp(guest.id, selectedMembers);
 
       if (result.success) {
         setState('success');
@@ -135,18 +121,7 @@ export function RSVPModal({ variant = 'primary', className = '' }: RSVPModalProp
     setError(null);
   };
 
-  const formatPhone = (value: string) => {
-    const digits = value.replace(/\D/g, '');
-    if (digits.length <= 2) return digits;
-    if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`;
-  };
 
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatPhone(e.target.value);
-    setTelefone(formatted);
-    setError(null);
-  };
 
   // Gets all member names for rendering
   const allMembers = guest
@@ -185,7 +160,7 @@ export function RSVPModal({ variant = 'primary', className = '' }: RSVPModalProp
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-blue" />
                 <input
                   type="text"
-                  placeholder="Qual nome está no convite?"
+                  placeholder="Digite o nome como está no convite"
                   value={searchName}
                   onChange={(e) => {
                     setSearchName(e.target.value);
@@ -237,7 +212,7 @@ export function RSVPModal({ variant = 'primary', className = '' }: RSVPModalProp
               <div className="text-center text-lg gap-2">
                 <p className="text-orange">Olá, {guest.nome_principal}!</p>
                 <p className="text-orange text-base mt-1">
-                  Quem estará com você no grande dia?
+                  Selecione as pessoas para confirmar presença
                 </p>
               </div>
 
@@ -254,18 +229,6 @@ export function RSVPModal({ variant = 'primary', className = '' }: RSVPModalProp
                     <span className="text-blue font-lg">{name}</span>
                   </label>
                 ))}
-              </div>
-
-              <div className="relative">
-                <FaWhatsapp className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-blue" />
-                <input
-                  type="tel"
-                  placeholder="WhatsApp para contato"
-                  value={telefone}
-                  onChange={handlePhoneChange}
-                  maxLength={15}
-                  className="w-full pl-10 pr-4 py-3 border border-blue/30 rounded-xl text-blue focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent transition-all"
-                />
               </div>
             </div>
 

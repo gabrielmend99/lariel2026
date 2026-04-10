@@ -14,8 +14,21 @@ const meow = Meow_Script({
 })
 
 export const metadata: Metadata = {
-  title: 'Casamento 2026',
-  description: 'Celebre conosco este momento especial',
+  title: 'Larissa e Gabriel - 25 de julho de 2026',
+  description: 'Celebre conosco este momento especial.',
+  keywords: ['casamento', 'Larissa', 'Gabriel', 'wedding', '2026', 'RSVP'],
+  authors: [{ name: 'Larissa' }],
+  openGraph: {
+    type: 'website',
+    locale: 'pt_BR',
+    siteName: 'Casamento Larissa e Gabriel 2026',
+    title: 'Larissa e Gabriel - 25 de julho de 2026',
+    description: 'Celebre conosco este momento especial.',
+
+  },
+  icons: {
+    icon: '/icon.png',
+  },
 };
 
 export default function Layout({

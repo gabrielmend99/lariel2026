@@ -17,7 +17,16 @@ export interface GuestSearchResult {
 }
 
 /**
- * Busca um convidado pelo nome usando ilike (case-insensitive)
+ * Remove acentos e til do texto
+ * @param str - Texto a ser normalizado
+ * @returns Texto sem acentos
+ */
+function removeAccents(str: string): string {
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+/**
+ * Busca um convidado pelo nome ignorando acentos e case-sensitive
  * @param name - Nome a ser buscado
  * @returns Dados do convidado e grupo familiar ou erro
  */
@@ -27,33 +36,45 @@ export async function searchGuest(name: string): Promise<GuestSearchResult> {
   }
 
   try {
+    const normalizedSearchName = removeAccents(name.trim().toLowerCase());
+    
+    // Busca todos os convidados e filtra localmente para ignorar acentos
     const { data, error } = await supabase
       .from('convidados')
-      .select('*')
-      .ilike('nome_principal', name.trim())
-      .limit(1)
-      .single();
+      .select('*');
 
     if (error) {
       console.error('Supabase error:', error);
-      return { guest: null, error: 'Erro ao buscar convidado. Tente novamente.' };
+      return { guest: null, error: 'Convidado não encontrado. Digite o nome exatamente como está no convite.' };
     }
 
-    if (!data) {
+    if (!data || data.length === 0) {
       return {
         guest: null,
-        error: 'Nome não encontrado. Por favor, verifique a grafia ou entre em contato com os noivos.',
+        error: 'Nenhum convidado encontrado no banco de dados.',
+      };
+    }
+
+    // Filtra localmente comparando nomes normalizados
+    const foundData = data.find(
+      (guest) => removeAccents(guest.nome_principal.toLowerCase()) === normalizedSearchName
+    );
+
+    if (!foundData) {
+      return {
+        guest: null,
+        error: 'Convidado não encontrado. Digite o nome exatamente como está no convite.',
       };
     }
 
     return {
       guest: {
-        id: data.id,
-        nome_principal: data.nome_principal,
-        grupo_familia: data.grupo_familia || [],
-        confirmados: data.confirmados || {},
-        telefone: data.telefone,
-        data_confirmacao: data.data_confirmacao,
+        id: foundData.id,
+        nome_principal: foundData.nome_principal,
+        grupo_familia: foundData.grupo_familia || [],
+        confirmados: foundData.confirmados || {},
+        telefone: foundData.telefone,
+        data_confirmacao: foundData.data_confirmacao,
       },
       error: null,
     };

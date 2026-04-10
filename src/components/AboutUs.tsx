@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import aboutUsImage from 'assets/about-usImage.png';
-import sealImage from 'assets/sealImage.png';
+import sealImage from 'assets/sealImage.svg';
 
 export function AboutUs() {
   return (
@@ -18,8 +18,8 @@ export function AboutUs() {
 
       {/* Texto à direita */}
       <div className="flex flex-col gap-8 md:gap-12 items-start font-syne order-2 md:order-2" data-name="section Text">
-        <p className="text-orange text-2xl w-full max-w-[486px]">
-          Mais de 10 anos separam quem somos hoje de quem éramos quando tudo começou.
+        <p className="font-syne uppercase text-orange text-2xl w-full max-w-[486px]">
+          Mais de 10 anos nos separam de quem éramos quando tudo começou.
         </p>
         <div className="flex flex-col md:flex-row gap-4 md:gap-12 text-xl text-orange font-syne">
           <p className="w-full md:max-w-[310px]">
