@@ -14,7 +14,7 @@ export function Info() {
         <section className="px-4 py-12 md:p-12 w-full bg-purple flex flex-col md:flex-row justify-center gap-12 items-center">
             <div className="md:w-[40%] gap-8 md:gap-12 flex flex-col items-center justify-center">
                 <Image src={larielLogo} alt="Logo Lariel" className="w-full max-w-[200px] md:max-w-[300px]" style={{ transform: 'rotate(-10deg)' }}/>
-                <H1>25/07 às 15h30</H1>
+                <H1>25/07 às 15h</H1>
                 <div className="flex flex-col items-center justify-center gap-4">
                 <RSVPModal variant="secondary" className="-rotate-2"></RSVPModal> 
                 <Button variant='secondary' className="rotate-1" href="/gifts">Lista de presentes</Button>

@@ -42,7 +42,7 @@ export default function Home() {
             <>
               Se quiser contribuir com esse novo capitulo das nossas vidas, seu presente será carinhosamente transformado em momentos inesqueciveis na nossa lua de mel e nos próximos planos da nossa família.<br/><br/>
               
-              No nosso site, você pode escolher um presente da lista ou contribuir via Pix.
+              <a href='/gifts' className="text-blue text-xl underline transition-all hover:scale-105 active:scale-95">Neste link</a> você pode escolher um presente da lista ou contribuir via PIX.
             </>)
         },
         {
