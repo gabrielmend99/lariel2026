@@ -37,7 +37,7 @@ export default function Layout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className={`${syne.variable} ${meow.variable}`}>
+    <html lang="pt-BR" className={`${syne.variable} ${meow.variable}`} style={{ colorScheme: 'light' }}>
       <head>
         <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
       </head>
