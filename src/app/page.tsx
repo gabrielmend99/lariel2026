@@ -40,9 +40,13 @@ export default function Home() {
           question: "Como posso presentear os noivos?",
           answer: (
             <>
-              Se quiser contribuir com esse novo capitulo das nossas vidas, seu presente será carinhosamente transformado em momentos inesqueciveis na nossa lua de mel e nos próximos planos da nossa família.<br/><br/>
+              Como já temos nossa casa equipada, nossa lista de presentes funciona de um jeito um pouquinho diferente: em vez de itens físicos, as opções são contribuições em dinheiro que serão transformadas em experiências inesquecíveis, como nossa lua de mel e os próximos planos da nossa família.<br/><br/>
               
-              <a href='/gifts' className="text-blue text-xl underline transition-all hover:scale-105 active:scale-95">Neste link</a> você pode escolher um presente da lista ou contribuir via PIX.
+              É bem simples! Acesse nossa lista <a href='/gifts' className="text-blue text-xl underline transition-all hover:scale-105 active:scale-95">neste link</a>, escolha uma das opções com valores sugeridos (como uma diária na pousada, um jantar romântico ou um passeio especial) e contribua via PIX ou cartão pelo Mercado Pago, com total segurança.<br/><br/>
+
+              Se preferir, também é possível contribuir livremente com o valor que quiser, sem escolher uma opção específica, é só clicar em "Contribuir via PIX" diretamente na lista.<br/><br/>
+  
+              O que importa de verdade é a sua presença e o seu carinho. Qualquer contribuição, grande ou pequena, vai fazer parte da nossa história. 💛
             </>)
         },
         {

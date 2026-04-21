@@ -64,19 +64,40 @@ async function getPresentes(): Promise<Presente[]> {
 
   console.log('[DEBUG] Presentes encontrados:', data?.length);
 
-  // Separar por presença de imagem
-  const comImagem = (data || []).filter(p => p.imagem_url);
-  const semImagem = (data || []).filter(p => !p.imagem_url);
+  // Valores dos vales que devem aparecer fixamente no início
+  const valesValores = [50, 100, 250, 500];
+  
+  // Separar vales especiais do resto
+  const valesPresentes: Presente[] = [];
+  const outrosPresentes: Presente[] = [];
+  
+  (data || []).forEach(presente => {
+    if (valesValores.includes(presente.valor)) {
+      valesPresentes.push(presente);
+    } else {
+      outrosPresentes.push(presente);
+    }
+  });
+
+  // Ordenar vales na ordem desejada
+  const valesOrdenados = valesValores
+    .map(valor => valesPresentes.find(p => p.valor === valor))
+    .filter((p): p is Presente => p !== undefined);
+
+  // Separar outros presentes por presença de imagem
+  const comImagem = outrosPresentes.filter(p => p.imagem_url);
+  const semImagem = outrosPresentes.filter(p => !p.imagem_url);
 
   // Embaralhar cada grupo com a mesma seed
   const seed = getDailySeed();
   const comImagemEmbaralhados = seededShuffle(comImagem, seed);
   const semImagemEmbaralhados = seededShuffle(semImagem, seed + 1); // Seed diferente para o segundo grupo
 
-  // Combinar: com imagem primeiro (melhor visibilidade), depois sem imagem
-  const sorted = [...comImagemEmbaralhados, ...semImagemEmbaralhados];
+  // Combinar: vales primeiro, depois com imagem, depois sem imagem
+  const sorted = [...valesOrdenados, ...comImagemEmbaralhados, ...semImagemEmbaralhados];
 
   console.log('[DEBUG] Presentes retornados após shuffle:', sorted.length);
+  console.log('[DEBUG] Vales encontrados:', valesOrdenados.length);
   return sorted;
 }
 
@@ -98,27 +119,27 @@ export default async function Gifts() {
       <Navbar />
       <section className="bg-orange w-full flex flex-col gap-8 items-center py-12">
         <H1 className="uppercase w-full max-w-[1060px] text-center">Lista de presentes</H1>
-        <p className="text-cream text-xl text-center w-full max-w-[1060px] px-4">Nossa lista de presentes reúne itens e experiências que vão nos fazer muito felizes.</p>
+        <p className="text-cream text-xl text-center w-full max-w-[1060px] px-4">Para nos presentear, você pode escolher um produto ou experiência da nossa lista, clicar em "Presentear" e fazer o pagamento como preferir: parcelado no cartão ou via PIX. O valor chega direto em nossas mãos e você não precisa se preocupar com mais nada.</p>
       </section>
 
       <section className="bg-cream w-full px-4 md:px-12 py-12">
-        <div className="w-full border border-blue rounded-xl p-6 md:p-12 flex flex-col md:flex-row justify-center justify-between gap-8 md:gap-12">
+        <div className="w-full border border-orange rounded-xl p-6 md:p-12 flex flex-col md:flex-row justify-center justify-between gap-8 md:gap-12">
           <div className="flex flex-col justify-between gap-8">
           <div className="flex flex-col gap-4">
-          <h2 className="text-blue text-2xl uppercase">No PIX é mais fácil</h2>
-          <p className="text-blue text-xl">Tá na dúvida? Manda um PIX!
-          <br/>Vamos receber sua contribuição com muito amor e transformar em momentos especiais.</p>
+          <h2 className="text-orange text-2xl uppercase">No PIX é mais fácil</h2>
+          <p className="text-orange text-xl">Tá na dúvida? Manda um PIX!
+          <br/>Vamos receber sua contribuição com muito amor.</p>
           </div>
           <div className="flex flex-col gap-4">
             <div className="flex flex-row items-center gap-1">
-              <PixIcon className="w-6 text-blue"/>
-              <p className="text-blue text-xl">(19) 97140-8063</p>
+              <PixIcon className="w-6 text-orange"/>
+              <p className="text-orange text-xl">Chave PIX: (19) 97140-8063</p>
             </div>
             <PixCopyButton/>
           </div>
           </div>
           <div className="w-full flex md:max-w-[240px] h-auto justify-end">
-            <Image src={QRCode} alt="QR Code para pagamento" className="w-full rounded-lg"/>
+            <Image src={QRCode} alt="QR Code para pagamento" className="w-full rounded-lg aspect-square"/>
           </div>
         </div>
       </section>
