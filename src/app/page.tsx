@@ -20,9 +20,7 @@ export default function Home() {
           answer: (
             <>
               O traje é social e pra gente isso significa: se sinta elegante, mas principalmente confortável!<br/><br/>
-
-              Nossa festa será inteiramente ao ar livre, com pista de dança na grama, então vale trocar saltos muito finos e altos por opções mais amigas da festa.<br/><br/>
-
+              
               Iremos nos casar no inverno e o clima anda cheio de surpresas, escolha roupas que possam combinar com uma camada extra, pra se manter aquecido caso precise.<br/><br/>
               Lembre-se, branco e off white, são reservados para a noiva ok?
             </>)

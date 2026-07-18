@@ -34,11 +34,11 @@ export function Info() {
                     </div>
                         <div className="flex flex-col gap-2">
                         <p className="text-orange">
-                            Depois vamos jantar e curtir na chácara Encanto das Fadas.
+                            Depois vamos jantar e curtir na chácara Santa Isabel.
                         </p>
-                        <a href="https://maps.app.goo.gl/YZi94TpPBE9HcoV2A" target="_blank" rel="noopener noreferrer" className="text-blue text-lg underline transition-all hover:scale-105 active:scale-95 inline-flex gap-2">
+                        <a href="https://maps.app.goo.gl/Vfrm1RpatEgoM3ZB6" target="_blank" rel="noopener noreferrer" className="text-blue text-lg underline transition-all hover:scale-105 active:scale-95 inline-flex gap-2">
                             <SquareArrowOutUpRight className="mt-1 w-4 h-4 flex-shrink-0" />
-                            Na avenida Lourenço Gerbi, 45. Jardim Ipê Pinheiro
+                            Na rua Filomena C Donegá, 420, 420. Chácara Nova Odessa.
                         </a>
                     </div>
                 </div>
